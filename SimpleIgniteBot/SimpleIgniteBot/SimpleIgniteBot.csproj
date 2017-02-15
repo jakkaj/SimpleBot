@@ -197,6 +197,8 @@
     <Compile Include="LUIS\Partial_Luis_Questions.cs" />
     <Compile Include="LUIS\Part_Luis_TranslationChoice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QnaMaker\QnaMaker.cs" />
+    <Compile Include="QnaMaker\QnaMakerResult.cs" />
     <Compile Include="Services\Entities\Presenter.cs" />
     <Compile Include="Services\Entities\Session.cs" />
     <Compile Include="Services\PretendBackendService.cs" />

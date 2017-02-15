@@ -1,7 +1,7 @@
 {
   "luis_schema_version": "1.3.1",
   "versionId": "0.1",
-  "name": "Test Demo",
+  "name": "IgniteBotDemo",
   "desc": "Demo LUIS for the ignite bot demo",
   "culture": "en-us",
   "intents": [
@@ -13,6 +13,9 @@
     },
     {
       "name": "None"
+    },
+    {
+      "name": "WhatsOnTomorrow"
     }
   ],
   "entities": [
@@ -75,20 +78,9 @@
   "regex_features": [],
   "utterances": [
     {
-      "text": "find me talks by jordan knight",
-      "intent": "FindTalkPerson",
-      "entities": [
-        {
-          "entity": "LastName",
-          "startPos": 5,
-          "endPos": 5
-        },
-        {
-          "entity": "FirstName",
-          "startPos": 4,
-          "endPos": 4
-        }
-      ]
+      "text": "show me sessions for tomorrow",
+      "intent": "WhatsOnTomorrow",
+      "entities": []
     },
     {
       "text": "when is jordan knight presenting",
@@ -96,18 +88,18 @@
       "entities": []
     },
     {
-      "text": "when is tim hill speaking",
+      "text": "find me talks by jordan knight",
       "intent": "FindTalkPerson",
       "entities": [
         {
-          "entity": "LastName",
-          "startPos": 3,
-          "endPos": 3
+          "entity": "FirstName",
+          "startPos": 4,
+          "endPos": 4
         },
         {
-          "entity": "FirstName",
-          "startPos": 2,
-          "endPos": 2
+          "entity": "LastName",
+          "startPos": 5,
+          "endPos": 5
         }
       ]
     },
@@ -116,23 +108,28 @@
       "intent": "FindTalkPerson",
       "entities": [
         {
-          "entity": "LastName",
-          "startPos": 3,
-          "endPos": 3
-        },
-        {
           "entity": "FirstName",
           "startPos": 2,
           "endPos": 2
+        },
+        {
+          "entity": "LastName",
+          "startPos": 3,
+          "endPos": 3
         }
       ]
     },
     {
-      "text": "tell me about keynote1",
-      "intent": "GetSessionDetail",
+      "text": "when is tim hill speaking",
+      "intent": "FindTalkPerson",
       "entities": [
         {
-          "entity": "SessionCode",
+          "entity": "FirstName",
+          "startPos": 2,
+          "endPos": 2
+        },
+        {
+          "entity": "LastName",
           "startPos": 3,
           "endPos": 3
         }
@@ -170,6 +167,22 @@
           "endPos": 5
         }
       ]
+    },
+    {
+      "text": "tell me about keynote1",
+      "intent": "GetSessionDetail",
+      "entities": [
+        {
+          "entity": "SessionCode",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "what's on tomorrow?",
+      "intent": "WhatsOnTomorrow",
+      "entities": []
     }
   ]
 }
