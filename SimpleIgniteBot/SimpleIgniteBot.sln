@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26206.0
+VisualStudioVersion = 15.0.26127.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleIgniteBot", "SimpleIgniteBot\SimpleIgniteBot.csproj", "{2EB1D487-EFBE-4423-BC5C-3C8D9AC6388E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DXAU.CognitiveServices.Translator", "DXAU.CognitiveServices.Translator\DXAU.CognitiveServices.Translator.csproj", "{58190CAA-58B4-481F-99EA-51C7D93AD673}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBot.Library", "EventBot.Library\EventBot.Library.csproj", "{EF77B8E8-285F-4DF8-B4DF-53DDD55555BB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CognitiveServices", "CognitiveServices", "{81BF4449-0981-463A-8DEB-9F3E7221A6E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

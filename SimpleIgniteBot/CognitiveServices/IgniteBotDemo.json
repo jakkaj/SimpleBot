@@ -1,0 +1,175 @@
+{
+  "luis_schema_version": "1.3.1",
+  "versionId": "0.1",
+  "name": "Test Demo",
+  "desc": "Demo LUIS for the ignite bot demo",
+  "culture": "en-us",
+  "intents": [
+    {
+      "name": "FindTalkPerson"
+    },
+    {
+      "name": "GetSessionDetail"
+    },
+    {
+      "name": "None"
+    }
+  ],
+  "entities": [
+    {
+      "name": "FirstName"
+    },
+    {
+      "name": "LastName"
+    },
+    {
+      "name": "SessionCode"
+    }
+  ],
+  "composites": [],
+  "closedLists": [],
+  "bing_entities": [],
+  "actions": [
+    {
+      "actionName": "FindTalkPerson",
+      "intentName": "FindTalkPerson",
+      "channel": null,
+      "actionParameters": [
+        {
+          "parameterName": "FirstName",
+          "entityName": "FirstName",
+          "required": false,
+          "question": "",
+          "phraseListFeatureName": "FirstName"
+        },
+        {
+          "parameterName": "LastName",
+          "entityName": "LastName",
+          "required": false,
+          "question": "",
+          "phraseListFeatureName": "LastName"
+        }
+      ]
+    }
+  ],
+  "model_features": [
+    {
+      "name": "FirstName",
+      "mode": true,
+      "words": "Jordan,Tim",
+      "activated": true
+    },
+    {
+      "name": "LastName",
+      "mode": true,
+      "words": "Knight,Hill",
+      "activated": true
+    },
+    {
+      "name": "SessionCode",
+      "mode": true,
+      "words": "net111,cld323,keynote1",
+      "activated": true
+    }
+  ],
+  "regex_features": [],
+  "utterances": [
+    {
+      "text": "find me talks by jordan knight",
+      "intent": "FindTalkPerson",
+      "entities": [
+        {
+          "entity": "LastName",
+          "startPos": 5,
+          "endPos": 5
+        },
+        {
+          "entity": "FirstName",
+          "startPos": 4,
+          "endPos": 4
+        }
+      ]
+    },
+    {
+      "text": "when is jordan knight presenting",
+      "intent": "FindTalkPerson",
+      "entities": []
+    },
+    {
+      "text": "when is tim hill speaking",
+      "intent": "FindTalkPerson",
+      "entities": [
+        {
+          "entity": "LastName",
+          "startPos": 3,
+          "endPos": 3
+        },
+        {
+          "entity": "FirstName",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "when is jordan knight speaking",
+      "intent": "FindTalkPerson",
+      "entities": [
+        {
+          "entity": "LastName",
+          "startPos": 3,
+          "endPos": 3
+        },
+        {
+          "entity": "FirstName",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "tell me about keynote1",
+      "intent": "GetSessionDetail",
+      "entities": [
+        {
+          "entity": "SessionCode",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "where is net111?",
+      "intent": "GetSessionDetail",
+      "entities": [
+        {
+          "entity": "SessionCode",
+          "startPos": 2,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "more information on cld323",
+      "intent": "GetSessionDetail",
+      "entities": [
+        {
+          "entity": "SessionCode",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "find me more info on keynote1",
+      "intent": "GetSessionDetail",
+      "entities": [
+        {
+          "entity": "SessionCode",
+          "startPos": 5,
+          "endPos": 5
+        }
+      ]
+    }
+  ]
+}
