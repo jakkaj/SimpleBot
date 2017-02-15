@@ -3,11 +3,12 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Mvc;
+using EventBot.SupportLibrary.Services;
 using Microsoft.ApplicationInsights;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using SimpleIgniteBot.Bot;
+using LuisModel = SimpleIgniteBot.LUIS.LuisModel;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -35,6 +36,7 @@ namespace SimpleIgniteBot.Controllers
         [System.Web.Mvc.HttpPost]
         public async Task<HttpResponseMessage> Post([FromBody] Activity activity)
         {
+            var translator = new TranslatorService();
             if (activity == null)
             {
                 //tc.TrackTrace("MessagesController::NULL Activity received");
@@ -43,14 +45,46 @@ namespace SimpleIgniteBot.Controllers
             {
                 var text = activity.Text;
 
-                if (activity.Text.ToLowerInvariant() == "ping")
+                if (text.ToLowerInvariant() == "ping")
                 {
                     ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
                     Activity reply = activity.CreateReply("pong");
                     await connector.Conversations.ReplyToActivityAsync(reply);
                 }
+                else if (activity.Text.ToLowerInvariant().Contains("command language"))
+                {
+                    var t = activity.Text.ToLowerInvariant().Replace("command language", "");
+                    t = t.Trim();
+                    
+                    await translator.SetLanguage(activity, t);
+
+                    ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+                    Activity reply = activity.CreateReply(await translator.TranslateBack(activity, "Your language preference has been set!"));
+                    await connector.Conversations.ReplyToActivityAsync(reply);
+                }
                 else
                 {
+                    var language = await translator.GetLanguage(activity);
+
+                    if (!string.IsNullOrWhiteSpace(language))
+                    {
+                        var detected = await translator.Detect(text);
+
+                        if (detected == "en")
+                        {
+                            //do nothing becasue it might be a response. 
+                            //  await translator.SetLanguage(activity, null);
+                        }
+                        else
+                        {
+                            var translated = await translator.Translate(text, language);
+                            if (!string.IsNullOrWhiteSpace(translated))
+                            {
+                                activity.Text = translated;
+                            }
+                        }
+
+                    }
                     await Conversation.SendAsync(activity, () => new LuisModel());
                 }
             }

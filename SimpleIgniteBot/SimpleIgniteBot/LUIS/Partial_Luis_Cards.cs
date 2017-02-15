@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using Humanizer;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using SimpleIgniteBot.Services.Entities;
 
-namespace SimpleIgniteBot.Bot
+namespace SimpleIgniteBot.LUIS
 {
     public partial class LuisModel : LuisDialog<object>
     {

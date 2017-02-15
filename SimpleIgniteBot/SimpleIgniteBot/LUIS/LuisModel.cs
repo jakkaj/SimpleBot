@@ -1,37 +1,82 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using System.Web;
+using EventBot.EditableDialogs;
+using EventBot.SupportLibrary.Services;
 using Microsoft.ApplicationInsights;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
 using Microsoft.Bot.Connector;
+using SimpleIgniteBot.Bot;
 using SimpleIgniteBot.Services;
 
-namespace SimpleIgniteBot.Bot
+namespace SimpleIgniteBot.LUIS
 {
     [Serializable]
     [LuisModel("9da30c54-0d95-4da3-84df-93cccf9ddd36", "bcb9ff185bdb4528915da32797310016")]
-    public partial class LuisModel : LuisDialog<object>
+    public partial class LuisModel : LuisDialog<object>, IDialog<object>
     {
         [NonSerialized]
         private PretendBackendService _backEndService;
         [NonSerialized]
         private TelemetryClient _telemetry;
+        [NonSerialized]
+        private TranslatorService _translatorService;
 
         private ResumptionCookie _resumptionCookie;
 
         public LuisModel()
         {
+            _setup();
+        }
+
+
+        [OnDeserialized]
+        internal void _deserialized(StreamingContext context)
+        {
+            try
+            {
+                _setup();
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+
+        void _setup()
+        {
             _backEndService = new PretendBackendService();
+            _telemetry = new TelemetryClient();
+            _translatorService = new TranslatorService();
+        }
+
+
+        async Task IDialog<object>.StartAsync(IDialogContext context)
+        {
+            try
+            {
+                var translatingContext = new TranslatingDialogContext(context);
+                await base.StartAsync(translatingContext);
+            }
+            catch (Exception e)
+            {
+                _telemetry.TrackException(e);
+                _telemetry.TrackTrace("Exception in EvenLuisModel.StartAsync (propagated)");
+            }
         }
 
         protected async override Task MessageReceived(IDialogContext context, IAwaitable<IMessageActivity> item)
         {
             try
             {
+                if (!(context is TranslatingDialogContext))
+                {
+                    context = new TranslatingDialogContext(context);
+                }
+
                 var activity = (Activity) await item;
                 _resumptionCookie = new ResumptionCookie(activity);
                 await base.MessageReceived(context, item);
@@ -40,7 +85,12 @@ namespace SimpleIgniteBot.Bot
             {
                 _telemetry.TrackException(ex);
             }
-           
+        }
+
+        [LuisIntent("WhatsOnTomorrow")]
+        public async Task WhatsOnTomorrow(IDialogContext context, LuisResult result)
+        {
+            await WhereNext(context);
         }
 
         [LuisIntent("FindTalkPerson")]
@@ -89,10 +139,33 @@ namespace SimpleIgniteBot.Bot
         [LuisIntent("")]
         public async Task NoItent(IDialogContext context, LuisResult result)
         {
-            var sentReply = await QueryQnaMakerAsync(context, result);
-        }
+            if (_translatorService.GetLanguage(context) != "en")
+            {
+                var checkLanguage = await _translatorService.Detect(result.Query);
+                if (checkLanguage != "en")
+                {
+                    context.UserData.SetValue("checkLanguage", checkLanguage);
 
-        private async Task<bool> QueryQnaMakerAsync(IDialogContext context, LuisResult result)
+                    EditablePromptDialog.Choice(context,
+                        LanuageSelectionChoicesAsync,
+                        new List<string> { "Yes", "No" },
+                        await _translatorService.Translate(
+                            "You are not speaking English! Would you like me to translate for you?", "en",
+                            checkLanguage),
+                        await _translatorService.Translate(
+                            "I didn't understand that. Please choose one of the options", "en",
+                            checkLanguage),
+                        2);
+
+                    return;
+                    //var resultToTranslate =
+                    //    "It seems like you are not speaking English. Would you like me to translate for you?";
+                    //var resultTranslated = await _translatorService.Translate(resultToTranslate, "en", checkLanguage);
+                    //await context.PostAsync(resultTranslated);
+                    //props.Add("NonEnglishDetected", checkLanguage);
+                }
+
+                        private async Task<bool> QueryQnaMakerAsync(IDialogContext context, LuisResult result)
         {
             try
             {
@@ -112,6 +185,7 @@ namespace SimpleIgniteBot.Bot
 
             return true;
         }
-
+            }
+        }
     }
 }

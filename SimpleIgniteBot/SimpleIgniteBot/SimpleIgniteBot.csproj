@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SimpleIgniteBot</RootNamespace>
     <AssemblyName>SimpleIgniteBot</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -35,6 +35,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -86,13 +87,14 @@
     </Reference>
     <Reference Include="System.Net" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -180,19 +182,32 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Bot\LuisModel.cs" />
-    <Compile Include="Bot\Partial_Luis_Cards.cs" />
+    <Compile Include="Connected Services\MicrosoftTranslator\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="LUIS\LuisModel.cs" />
+    <Compile Include="LUIS\Partial_Luis_Cards.cs" />
+    <Compile Include="LUIS\Partial_Luis_Questions.cs" />
+    <Compile Include="LUIS\Part_Luis_TranslationChoice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Entities\Presenter.cs" />
     <Compile Include="Services\Entities\Session.cs" />
     <Compile Include="Services\PretendBackendService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Connected Services\MicrosoftTranslator\configuration91.svcinfo" />
+    <None Include="Connected Services\MicrosoftTranslator\configuration.svcinfo" />
+    <None Include="Connected Services\MicrosoftTranslator\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
@@ -204,6 +219,23 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Connected Services\MicrosoftTranslator\soap.wsdl" />
+    <None Include="Connected Services\MicrosoftTranslator\soap.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\MicrosoftTranslator\soap1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\MicrosoftTranslator\soap2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\MicrosoftTranslator\soap3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\MicrosoftTranslator\SoapService.wsdl" />
+    <Content Include="Properties\DataSources\DXAU.CognitiveServices.Translator.MicrosoftTranslator.GetTranslationsResponse.datasource" />
+    <Content Include="Properties\DataSources\DXAU.CognitiveServices.Translator.MicrosoftTranslator.TranslateArray2Response.datasource" />
+    <Content Include="Properties\DataSources\DXAU.CognitiveServices.Translator.MicrosoftTranslator.TranslateArrayResponse.datasource" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -249,6 +281,22 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\MicrosoftTranslator\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DXAU.CognitiveServices.Translator\DXAU.CognitiveServices.Translator.csproj">
+      <Project>{58190caa-58b4-481f-99ea-51c7d93ad673}</Project>
+      <Name>DXAU.CognitiveServices.Translator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EventBot.Library\EventBot.Library.csproj">
+      <Project>{EF77B8E8-285F-4DF8-B4DF-53DDD55555BB}</Project>
+      <Name>EventBot.Library</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
