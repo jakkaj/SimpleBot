@@ -89,7 +89,29 @@ namespace SimpleIgniteBot.Bot
         [LuisIntent("")]
         public async Task NoItent(IDialogContext context, LuisResult result)
         {
-
+            var sentReply = await QueryQnaMakerAsync(context, result);
         }
+
+        private async Task<bool> QueryQnaMakerAsync(IDialogContext context, LuisResult result)
+        {
+            try
+            {
+                var qnaMakerKb = new QnaMakerKb();
+                var qnaResult = await qnaMakerKb.SearchFaqAsync(result.Query);
+                if (qnaResult == null || qnaResult.Score <= 30 ||
+                    qnaResult.Answer == "No good match found in the KB") return false;
+
+                var replyContent = qnaResult.Answer;
+
+                await context.PostAsync(replyContent);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
     }
 }
