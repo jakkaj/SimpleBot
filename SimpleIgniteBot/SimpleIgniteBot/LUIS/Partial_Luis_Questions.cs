@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using EventBot.EditableDialogs;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using SimpleIgniteBot.Services.Entities;
 
-namespace SimpleIgniteBot.Bot
+namespace SimpleIgniteBot.LUIS
 {
     public partial class LuisModel
     {
@@ -92,12 +92,12 @@ namespace SimpleIgniteBot.Bot
                 var matchingSessions = await _backEndService.GetSessionByTime(selectedTime);
 
 
-                _telemetry.TrackTrace($"TimeSlotChoiceAsync::{matchingSessions.Count()} sessions found in the selected timeslot/track");
+                _telemetry.TrackTrace($"TimeSlotChoiceAsync::{Enumerable.Count<Session>(matchingSessions)} sessions found in the selected timeslot/track");
 
-                if (matchingSessions.Any())
+                if (Enumerable.Any<Session>(matchingSessions))
                 {
-                    matchingSessions = matchingSessions.Take(8).ToList();
-                    await context.PostAsync($"{matchingSessions.Count()} sessions found in the {selectedTime}");
+                    matchingSessions = Enumerable.Take<Session>(matchingSessions, 8).ToList();
+                    await context.PostAsync($"{Enumerable.Count<Session>(matchingSessions)} sessions found in the {selectedTime}");
                     Activity replyActivity = await CreateSessionCardReply();
 
                     foreach (var session in matchingSessions)

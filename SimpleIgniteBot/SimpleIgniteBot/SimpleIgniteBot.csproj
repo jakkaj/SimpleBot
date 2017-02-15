@@ -195,6 +195,7 @@
     <Compile Include="LUIS\LuisModel.cs" />
     <Compile Include="LUIS\Partial_Luis_Cards.cs" />
     <Compile Include="LUIS\Partial_Luis_Questions.cs" />
+    <Compile Include="LUIS\Part_Luis_TranslationChoice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Entities\Presenter.cs" />
     <Compile Include="Services\Entities\Session.cs" />
@@ -263,7 +264,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Bot\" />
     <Folder Include="Models\" />
     <Folder Include="Views\Messages\" />
   </ItemGroup>

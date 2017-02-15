@@ -1,14 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using EventBot.EditableDialogs;
+using EventBot.SupportLibrary.Services;
 using Microsoft.ApplicationInsights;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
 using Microsoft.Bot.Connector;
+using SimpleIgniteBot.Bot;
 using SimpleIgniteBot.Services;
 
-namespace SimpleIgniteBot.Bot
+namespace SimpleIgniteBot.LUIS
 {
     [Serializable]
     [LuisModel("9da30c54-0d95-4da3-84df-93cccf9ddd36", "bcb9ff185bdb4528915da32797310016")]
@@ -18,6 +22,8 @@ namespace SimpleIgniteBot.Bot
         private PretendBackendService _backEndService;
         [NonSerialized]
         private TelemetryClient _telemetry;
+        [NonSerialized]
+        private TranslatorService _translatorService;
 
         private ResumptionCookie _resumptionCookie;
 
@@ -44,6 +50,7 @@ namespace SimpleIgniteBot.Bot
         {
             _backEndService = new PretendBackendService();
             _telemetry = new TelemetryClient();
+            _translatorService = new TranslatorService();
         }
 
 
@@ -132,7 +139,32 @@ namespace SimpleIgniteBot.Bot
         [LuisIntent("")]
         public async Task NoItent(IDialogContext context, LuisResult result)
         {
+            if (_translatorService.GetLanguage(context) != "en")
+            {
+                var checkLanguage = await _translatorService.Detect(result.Query);
+                if (checkLanguage != "en")
+                {
+                    context.UserData.SetValue("checkLanguage", checkLanguage);
 
+                    EditablePromptDialog.Choice(context,
+                        LanuageSelectionChoicesAsync,
+                        new List<string> { "Yes", "No" },
+                        await _translatorService.Translate(
+                            "You are not speaking English! Would you like me to translate for you?", "en",
+                            checkLanguage),
+                        await _translatorService.Translate(
+                            "I didn't understand that. Please choose one of the options", "en",
+                            checkLanguage),
+                        2);
+
+                    return;
+                    //var resultToTranslate =
+                    //    "It seems like you are not speaking English. Would you like me to translate for you?";
+                    //var resultTranslated = await _translatorService.Translate(resultToTranslate, "en", checkLanguage);
+                    //await context.PostAsync(resultTranslated);
+                    //props.Add("NonEnglishDetected", checkLanguage);
+                }
+            }
         }
     }
 }
