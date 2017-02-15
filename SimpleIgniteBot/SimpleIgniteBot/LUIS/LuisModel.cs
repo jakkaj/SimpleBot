@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.ApplicationInsights;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Luis;
@@ -14,7 +12,7 @@ namespace SimpleIgniteBot.Bot
 {
     [Serializable]
     [LuisModel("9da30c54-0d95-4da3-84df-93cccf9ddd36", "bcb9ff185bdb4528915da32797310016")]
-    public partial class LuisModel : LuisDialog<object>
+    public partial class LuisModel : LuisDialog<object>, IDialog<object>
     {
         [NonSerialized]
         private PretendBackendService _backEndService;
@@ -25,13 +23,53 @@ namespace SimpleIgniteBot.Bot
 
         public LuisModel()
         {
+            _setup();
+        }
+
+
+        [OnDeserialized]
+        internal void _deserialized(StreamingContext context)
+        {
+            try
+            {
+                _setup();
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+
+        void _setup()
+        {
             _backEndService = new PretendBackendService();
+            _telemetry = new TelemetryClient();
+        }
+
+
+        async Task IDialog<object>.StartAsync(IDialogContext context)
+        {
+            try
+            {
+                var translatingContext = new TranslatingDialogContext(context);
+                await base.StartAsync(translatingContext);
+            }
+            catch (Exception e)
+            {
+                _telemetry.TrackException(e);
+                _telemetry.TrackTrace("Exception in EvenLuisModel.StartAsync (propagated)");
+            }
         }
 
         protected async override Task MessageReceived(IDialogContext context, IAwaitable<IMessageActivity> item)
         {
             try
             {
+                if (!(context is TranslatingDialogContext))
+                {
+                    context = new TranslatingDialogContext(context);
+                }
+
                 var activity = (Activity) await item;
                 _resumptionCookie = new ResumptionCookie(activity);
                 await base.MessageReceived(context, item);
@@ -40,7 +78,12 @@ namespace SimpleIgniteBot.Bot
             {
                 _telemetry.TrackException(ex);
             }
-           
+        }
+
+        [LuisIntent("WhatsOnTomorrow")]
+        public async Task WhatsOnTomorrow(IDialogContext context, LuisResult result)
+        {
+            await WhereNext(context);
         }
 
         [LuisIntent("FindTalkPerson")]

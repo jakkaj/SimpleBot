@@ -3,7 +3,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Mvc;
 using Microsoft.ApplicationInsights;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
@@ -43,7 +42,7 @@ namespace SimpleIgniteBot.Controllers
             {
                 var text = activity.Text;
 
-                if (activity.Text.ToLowerInvariant() == "ping")
+                if (text.ToLowerInvariant() == "ping")
                 {
                     ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
                     Activity reply = activity.CreateReply("pong");
