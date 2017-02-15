@@ -42,7 +42,17 @@ namespace SimpleIgniteBot.Controllers
             else if (activity.Type == ActivityTypes.Message)
             {
                 var text = activity.Text;
-                await Conversation.SendAsync(activity, () => new LuisModel());
+
+                if (activity.Text.ToLowerInvariant() == "ping")
+                {
+                    ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+                    Activity reply = activity.CreateReply("pong");
+                    await connector.Conversations.ReplyToActivityAsync(reply);
+                }
+                else
+                {
+                    await Conversation.SendAsync(activity, () => new LuisModel());
+                }
             }
             else
             {
