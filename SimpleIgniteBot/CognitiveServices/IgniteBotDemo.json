@@ -78,14 +78,25 @@
   "regex_features": [],
   "utterances": [
     {
-      "text": "show me sessions for tomorrow",
-      "intent": "WhatsOnTomorrow",
-      "entities": []
-    },
-    {
       "text": "when is jordan knight presenting",
       "intent": "FindTalkPerson",
       "entities": []
+    },
+    {
+      "text": "when is tim hill speaking",
+      "intent": "FindTalkPerson",
+      "entities": [
+        {
+          "entity": "FirstName",
+          "startPos": 2,
+          "endPos": 2
+        },
+        {
+          "entity": "LastName",
+          "startPos": 3,
+          "endPos": 3
+        }
+      ]
     },
     {
       "text": "find me talks by jordan knight",
@@ -120,16 +131,11 @@
       ]
     },
     {
-      "text": "when is tim hill speaking",
-      "intent": "FindTalkPerson",
+      "text": "tell me about keynote1",
+      "intent": "GetSessionDetail",
       "entities": [
         {
-          "entity": "FirstName",
-          "startPos": 2,
-          "endPos": 2
-        },
-        {
-          "entity": "LastName",
+          "entity": "SessionCode",
           "startPos": 3,
           "endPos": 3
         }
@@ -147,17 +153,6 @@
       ]
     },
     {
-      "text": "more information on cld323",
-      "intent": "GetSessionDetail",
-      "entities": [
-        {
-          "entity": "SessionCode",
-          "startPos": 3,
-          "endPos": 3
-        }
-      ]
-    },
-    {
       "text": "find me more info on keynote1",
       "intent": "GetSessionDetail",
       "entities": [
@@ -169,7 +164,7 @@
       ]
     },
     {
-      "text": "tell me about keynote1",
+      "text": "more information on cld323",
       "intent": "GetSessionDetail",
       "entities": [
         {
@@ -181,6 +176,16 @@
     },
     {
       "text": "what's on tomorrow?",
+      "intent": "WhatsOnTomorrow",
+      "entities": []
+    },
+    {
+      "text": "tell me what's on tomorrow",
+      "intent": "WhatsOnTomorrow",
+      "entities": []
+    },
+    {
+      "text": "what are tomorrow's sessions?",
       "intent": "WhatsOnTomorrow",
       "entities": []
     }
