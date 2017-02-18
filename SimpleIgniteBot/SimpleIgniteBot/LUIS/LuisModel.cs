@@ -15,7 +15,7 @@ using SimpleIgniteBot.Services;
 namespace SimpleIgniteBot.LUIS
 {
     [Serializable]
-    [LuisModel("9da30c54-0d95-4da3-84df-93cccf9ddd36", "bcb9ff185bdb4528915da32797310016")]
+    [LuisModel("e1c926c2-4070-439c-ae17-4275209e8fef", "bcb9ff185bdb4528915da32797310016")]
     public partial class LuisModel : LuisDialog<object>, IDialog<object>
     {
         [NonSerialized]
