@@ -9,6 +9,7 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
 using Microsoft.Bot.Connector;
+using SimpleIgniteBot.QnAMaker;
 using SimpleIgniteBot.Bot;
 using SimpleIgniteBot.Services;
 
@@ -24,6 +25,8 @@ namespace SimpleIgniteBot.LUIS
         private TelemetryClient _telemetry;
         [NonSerialized]
         private TranslatorService _translatorService;
+
+        [NonSerialized] private QnaMakerKb _qnaMaker;
 
         private ResumptionCookie _resumptionCookie;
 
@@ -51,6 +54,7 @@ namespace SimpleIgniteBot.LUIS
             _backEndService = new PretendBackendService();
             _telemetry = new TelemetryClient();
             _translatorService = new TranslatorService();
+            _qnaMaker = new QnaMakerKb();
         }
 
 
@@ -137,8 +141,22 @@ namespace SimpleIgniteBot.LUIS
         }
 
         [LuisIntent("")]
-        public async Task NoItent(IDialogContext context, LuisResult result)
+        public async Task NoIntent(IDialogContext context, LuisResult result)
         {
+            var sentReply = await QueryQnaMakerAsync(context, result);
+
+            if (sentReply)
+            {
+                return;
+            }
+
+            // Add Azure Search fall-through here if required
+            // sentReply = await QueryAzureSearch(contenxt, result);
+            //if (sentReply)
+            //{
+            //    return;
+            //}
+
             if (_translatorService.GetLanguage(context) != "en")
             {
                 var checkLanguage = await _translatorService.Detect(result.Query);
@@ -148,7 +166,7 @@ namespace SimpleIgniteBot.LUIS
 
                     EditablePromptDialog.Choice(context,
                         LanuageSelectionChoicesAsync,
-                        new List<string> { "Yes", "No" },
+                        new List<string> {"Yes", "No"},
                         await _translatorService.Translate(
                             "You are not speaking English! Would you like me to translate for you?", "en",
                             checkLanguage),
@@ -158,13 +176,30 @@ namespace SimpleIgniteBot.LUIS
                         2);
 
                     return;
-                    //var resultToTranslate =
-                    //    "It seems like you are not speaking English. Would you like me to translate for you?";
-                    //var resultTranslated = await _translatorService.Translate(resultToTranslate, "en", checkLanguage);
-                    //await context.PostAsync(resultTranslated);
-                    //props.Add("NonEnglishDetected", checkLanguage);
                 }
             }
+
+            context.Wait(MessageReceived);
+        }
+
+        private async Task<bool> QueryQnaMakerAsync(IDialogContext context, LuisResult result)
+        {
+            try
+            {
+                var qnaResult = await _qnaMaker.SearchFaqAsync(result.Query);
+                if (qnaResult == null || qnaResult.Score <= 30 ||
+                    qnaResult.Answer == "No good match found in the KB") return false;
+
+                var replyContent = qnaResult.Answer;
+
+                await context.PostAsync(replyContent);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
