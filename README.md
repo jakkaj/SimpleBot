@@ -100,7 +100,7 @@ On top of this, the bot should have a personality and be funny - perhaps tell jo
 
 Importantly - the bot needs to be fast! We wanted the bot to respond immediately, which lead to some performance architectural decisions. 
 
-<img alt="Overview Architecture Diagrams" src="{{ site.baseurl }}/images/2017-04-07-nv/NVIgniteBot_architecture.png" width="720">
+<img alt="Overview Architecture Diagrams" src="https://cloud.githubusercontent.com/assets/5225782/26290283/befb4b02-3ee9-11e7-933f-3682f02643dd.png" width="720">
 </img>
 
 #### High level flow ####
@@ -149,14 +149,14 @@ To get started you can follow these steps.
 
 [Grab a copy of Visual Studio](https://www.visualstudio.com/downloads/) and install - make sure to include the "ASP.NET and Web development" workload in the install feature option dialog. If you've already installed Visual Studio and cannot see the the "Web" tab in the create new project dialog box - scroll to the bottom of the left pane and select "Open Visual Studio Installer" and proceed to add the workload. 
 
-<img alt="Visual Studio Workloads" src="{{ site.baseurl }}/images/2017-04-07-nv/VisualStudioWorkloads.png" width="320">
+<img alt="Visual Studio Workloads" src="https://cloud.githubusercontent.com/assets/5225782/26290291/ccf53574-3ee9-11e7-89fa-cda72d474900.png" width="320">
 </img>
 
 ### 2. Create your new project
 
 Create a new ASP.NET WebAPI project. Select "Create New Project" from the Visual Studio 2017 launch screen, select Web and choose "ASP.NET Web Application (.NET Framework), choose a folder for your new project and press OK. On the next screen select Web API and press OK. 
 
-<img alt="Visual Studio Workloads" src="{{ site.baseurl }}/images/2017-04-07-nv/WebAPICreate.png" width="320">
+<img alt="Web Api Creation" src="https://cloud.githubusercontent.com/assets/5225782/26290298/d52ff36e-3ee9-11e7-85fe-16a715bb0000.png" width="320">
 </img>
 
 ### 3. Install the BotBuilder Nuget Package
@@ -228,7 +228,7 @@ Users can ask questions in a variety of ways - it's part of the beauty of a chat
 
 LUIS takes the user's query, and turns it in to easily machine readable JSON data. 
 
-<img alt="LUIS Json Output Example" src="{{ site.baseurl }}/images/2017-04-07-nv/jsonexample.png" width="320">
+<img alt="LUIS Json Output Example" src="https://cloud.githubusercontent.com/assets/5225782/26290304/e3130354-3ee9-11e7-84fd-a467b9fdea38.png" width="320">
 </img>
 
 LUIS is also able to parse out the entities from you query - for example if you ask ```"Find me talks by Jordan Knight"``` the system will be able to return the intent ```FindTalkPerson``` and the entities ```FirstName```=Jordan and ```LastName```=Knight. 
@@ -253,7 +253,7 @@ Here is the json example of a phrase lists for the conference tracks to help giv
 
 To add these lists in the LUIS UI - select the "Features" tab. It's recommended you auto generate these phrase lists as part of your build and programmatically upload them via the [LUIS API](https://dev.projectoxford.ai/docs/services/56d95961e597ed0f04b76e58/operations/5739a8c71984550500affdfa). 
 
-<img alt="LUIS Json Output Example" src="{{ site.baseurl }}/images/2017-04-07-nv/LuisPortal.PNG" width="720">
+<img alt="LUIS Json Output Example" src="https://cloud.githubusercontent.com/assets/5225782/26290313/edff77ca-3ee9-11e7-8ce1-497e073798e3.PNG" width="720">
 </img>
 
 The BotBuilder contains boilerplate classes that assist with sending queries to LUIS and also in finding the correct code to run when an intent is detected. 
@@ -290,7 +290,7 @@ The next stage is to parse out the entities. Here you can see we're looking for 
 
 The Ignite Bot makes heavy use of Activity Cards to show session information. Further sample code for how the session cards work is [here](https://github.com/MSFTAuDX/SimpleBot/blob/master/SimpleIgniteBot/SimpleIgniteBot/LUIS/Partial_Luis_Cards.cs). 
 
-<img alt="Session card" src="{{ site.baseurl }}/images/2017-04-07-nv/SessionActivityCard.PNG" width="320">
+<img alt="Session card" src="https://cloud.githubusercontent.com/assets/5225782/26290317/f6eb72da-3ee9-11e7-9e78-5526ba81915e.PNG" width="320">
 </img>
 
 If the LUIS system does not match an intent (we have over 20 intents in the Ignite Bot system) then it will call the ```LuisDialog``` empty intent method which forms the mechanism for falling through to the next level - Qna Maker. 
@@ -305,19 +305,19 @@ public async Task NoIntent(IDialogContext context, LuisResult result)
 
 Most of the Cognitive Services require accounts to be created within an Azure subscription for billing. Log in to your Azure Portal and click the ">" at the bottom left and search for "cognitive". Click the little start logo next to the right hand side of the search area and to create a shortcut for later. 
 
-<img alt="Cognitive Services in the Portal" src="{{ site.baseurl }}/images/2017-04-07-nv/CognitivePortal.PNG" width="320">
+<img alt="Cognitive Services in the Portal" src="https://cloud.githubusercontent.com/assets/5225782/26290337/10d7cd9c-3eea-11e7-8041-80e0d2bc6e6d.PNG" width="320">
 </img>
 
 Within this are you can create keys for the various cognitive services such as LUIS and Bing Translator. 
 
 For now you'll just need a new LUIS key Once you've created a key for LUIS
 
-<img alt="Create a new Cognitive Service" src="{{ site.baseurl }}/images/2017-04-07-nv/CognitivePortalCreate.PNG" width="320">
+<img alt="Create a new Cognitive Service" src="https://cloud.githubusercontent.com/assets/5225782/26290326/02ac76f0-3eea-11e7-957d-34b75b05da74.PNG" width="320">
 </img>
 
 Once your Cognitive Services account is created, select it and select "Keys". Copy your key and add it as a key to your Luis account from the publish tab. 
 
-<img alt="Get your LUIS Keys" src="{{ site.baseurl }}/images/2017-04-07-nv/LuisKeys.PNG" width="320">
+<img alt="Get your LUIS Keys" src="https://cloud.githubusercontent.com/assets/5225782/26290343/194f39f6-3eea-11e7-8ea4-2dbbb0cc4ac6.PNG" width="320">
 </img>
 
 ### Level 3: QnA Maker ###
@@ -326,7 +326,7 @@ During the development of the bot we asked the event organisers to produce a lis
 
 We then uploaded the Q&A pairs in to the [QnA Maker](http://qnamaker.ai/) intelligent service. 
 
-<img alt="LUIS Json Output Example" src="{{ site.baseurl }}/images/2017-04-07-nv/QnaMakerPortal.PNG" width="720">
+<img alt="LUIS Json Output Example" src="https://cloud.githubusercontent.com/assets/5225782/26290346/215c81b2-3eea-11e7-8c77-5dbe3af474de.PNG" width="720">
 </img>
 
 QnA maker takes your question and answer pairs and processes them using machine learning so that you can ask questions in a range of ways to find the correct results - similar to LUIS, but instead of intents you get answers. 
@@ -378,7 +378,7 @@ If QnA maker doesn't return any results then we pass through to the next level -
 
 Azure Search is a powerful and easy to use search system which we use to provide full text "fuzzy" searching across the full session catalog in the hope that when LUIS and QnA maker miss - the system will return something meaningful for the user. 
 
-<img alt="Azure Search in the Portal" src="{{ site.baseurl }}/images/2017-04-07-nv/azuresearchportal.PNG" width="720">
+<img alt="Azure Search in the Portal" src="https://cloud.githubusercontent.com/assets/5225782/26290349/2dd947a4-3eea-11e7-8594-c3ae49241634.PNG" width="720">
 </img>
 
 First step is to set up a new Azure Search instance in the portal. Make sure it's hosted in the same datacenter as the rest of your system. Once the Search instance is ready, all you need from here is the instance url (from the overview screen) and key (keys section). 
